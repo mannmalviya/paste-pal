@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Paste Pal — Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <div class="page">
+    <h1>Paste Pal</h1>
+    <p class="sub">
+      Click a row's text to edit — changes save as you type.
+      ★ pinned entries show up in the right-click <b>Fill with</b> menu.
+    </p>
+
+    <section>
+      <h2>Entries</h2>
+      <ul id="entries"></ul>
+      <button id="add" class="secondary">+ Add entry</button>
+    </section>
+
+    <section>
+      <h2>Resumes</h2>
+      <p class="sub">
+        Stored locally on this computer. Right-click an upload area on any
+        job-application page → <b>Paste Pal → Attach resume</b>.
+      </p>
+      <ul id="resumes"></ul>
+      <button id="import-resume" class="secondary">+ Import PDF…</button>
+      <input id="resume-file" type="file" accept=".pdf,.doc,.docx" hidden />
+    </section>
+
+    <section>
+      <h2>Backup</h2>
+      <div class="row-buttons">
+        <button id="export" class="secondary">Export everything…</button>
+        <button id="import" class="secondary">Import backup…</button>
+        <input id="import-file" type="file" accept=".json" hidden />
+      </div>
+      <p class="sub">
+        The export file contains every entry and resume in plain text —
+        keep it somewhere private.
+      </p>
+    </section>
+  </div>
+
+  <script src="../src/store.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
