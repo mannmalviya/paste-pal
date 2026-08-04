@@ -25,6 +25,10 @@ function fill(value) {
     toast("Paste Pal: that doesn't look like a text field", true);
     return;
   }
+  fillElement(el, value);
+}
+
+function fillElement(el, value) {
   if (el.isContentEditable) {
     el.focus();
     // execCommand is deprecated but still the only way to insert text that
@@ -60,6 +64,43 @@ function setNativeValue(el, value) {
   el.dispatchEvent(new Event("input", { bubbles: true }));
   el.dispatchEvent(new Event("change", { bubbles: true }));
 }
+
+// ---------- auto-paste ----------
+//
+// When the auto-paste option is on, clicking an entry in the side panel
+// "arms" it (chrome.storage.local key "armed"). The next text box clicked
+// on any page gets filled with it, then the arm is cleared. Arms expire
+// so a forgotten one can't fire into a random field the next day.
+
+let armed = null;
+chrome.storage.local.get("armed").then((r) => (armed = r.armed ?? null));
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "local" && "armed" in changes)
+    armed = changes.armed.newValue ?? null;
+});
+
+document.addEventListener(
+  "click",
+  (e) => {
+    if (!armed) return;
+    if (Date.now() > armed.exp) {
+      armed = null;
+      chrome.storage.local.remove("armed");
+      return;
+    }
+    const el = findEditable(e.target);
+    if (!el) return;
+    const { value, label } = armed;
+    armed = null;
+    chrome.storage.local.remove("armed");
+    // let the click finish settling focus first
+    setTimeout(() => {
+      fillElement(el, value);
+      toast(`Pasted ${label}`);
+    }, 0);
+  },
+  { capture: true }
+);
 
 // ---------- attach ----------
 

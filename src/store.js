@@ -21,6 +21,7 @@ const SEED_ENTRIES = [
   { label: "LinkedIn", pinned: true },
   { label: "GitHub", pinned: true },
   { label: "Website", pinned: true },
+  { label: "X", pinned: true },
   { label: "School", pinned: false },
   { label: "Graduation date", pinned: false },
   { label: "Work authorization", pinned: false },

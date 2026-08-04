@@ -6,7 +6,9 @@ Filling out the same twelve fields on every Workday, Greenhouse, and Lever form 
 
 ## Three ways to use it
 
-**Copy**: click the toolbar icon to open the side panel. It stays open while you work through a form: type a few letters to filter, click a row, the value is on your clipboard. Paste, repeat.
+**Copy**: click the toolbar icon to open the side panel. It stays open while you work through a form: click a row, the value is on your clipboard. Paste, repeat. Phone entries also show a second row with plain dashed formatting (831-555-0142), since forms are picky about which style they want.
+
+With the optional **auto-paste** setting turned on, clicking an entry also arms it for 30 seconds: the next text box you click on the page gets filled with it automatically, no Ctrl+V needed.
 
 **Fill**: right-click any text field on a page → **Paste Pal → Fill with → Email**. The field is filled directly, no clipboard round-trip. Only your ★-pinned entries show here, so the menu stays short.
 

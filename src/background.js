@@ -3,9 +3,29 @@ importScripts("store.js");
 // Toolbar icon opens the side panel.
 chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
 
-chrome.runtime.onInstalled.addListener(() => {
-  seedIfEmpty().then(buildMenus);
+chrome.runtime.onInstalled.addListener(async () => {
+  await seedIfEmpty();
+  await migrate();
+  buildMenus();
 });
+
+// One-shot additions for installs that predate newer seed entries.
+async function migrate() {
+  const { seedVersion } = await chrome.storage.sync.get("seedVersion");
+  if ((seedVersion ?? 1) < 2) {
+    const entries = await loadEntries();
+    if (!entries.some((e) => /^x\b|twitter/i.test(e.label.trim()))) {
+      await saveEntry({
+        id: newId(),
+        label: "X",
+        value: "",
+        pinned: true,
+        order: entries.length,
+      });
+    }
+    await chrome.storage.sync.set({ seedVersion: 2 });
+  }
+}
 chrome.runtime.onStartup.addListener(buildMenus);
 
 // ---------- context menus ----------

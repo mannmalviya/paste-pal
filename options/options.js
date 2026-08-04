@@ -64,6 +64,16 @@ async function initAppearance() {
   });
 }
 
+// ---------- behavior ----------
+
+const autoPasteEl = document.getElementById("auto-paste");
+chrome.storage.sync
+  .get("autoPaste")
+  .then(({ autoPaste }) => (autoPasteEl.checked = !!autoPaste));
+autoPasteEl.addEventListener("change", () =>
+  chrome.storage.sync.set({ autoPaste: autoPasteEl.checked })
+);
+
 // ---------- entries ----------
 
 function debounce(fn, ms) {
