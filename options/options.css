@@ -1,40 +1,42 @@
 body { font-size: 14px; line-height: 1.5; }
 
-.page { max-width: 780px; margin: 0 auto; padding: 40px 20px 100px; }
+.page { max-width: 780px; margin: 0 auto; padding: 48px 20px 110px; }
 
 .hero {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 28px;
+  gap: 16px;
+  margin-bottom: 34px;
 }
 
 .hero .brand-mark {
-  width: 46px;
-  height: 46px;
+  width: 52px;
+  height: 52px;
   display: block;
+  filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--accent) 35%, transparent));
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 27px;
   margin: 0;
+  letter-spacing: -0.02em;
   background: var(--brand-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-h2 { font-size: 15px; margin: 0 0 6px; }
+h2 { font-size: 15px; margin: 0 0 6px; letter-spacing: -0.01em; }
 
 .sub { color: var(--muted); margin: 0 0 14px; font-size: 13px; }
 
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 20px 22px;
-  margin-bottom: 18px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 20px;
+  padding: 22px 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm), var(--card-edge);
 }
 
 /* ---------- appearance ---------- */
@@ -46,21 +48,21 @@ h2 { font-size: 15px; margin: 0 0 6px; }
   margin-top: 12px;
 }
 
-.control-group { display: flex; flex-direction: column; gap: 8px; }
+.control-group { display: flex; flex-direction: column; gap: 9px; }
 
 .control-label {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: var(--faint);
 }
 
 .segmented {
   display: inline-flex;
-  background: var(--bg);
+  background: color-mix(in srgb, var(--fg) 5%, transparent);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 3px;
   gap: 2px;
 }
@@ -69,11 +71,12 @@ h2 { font-size: 15px; margin: 0 0 6px; }
   border: none;
   background: none;
   padding: 6px 16px;
-  border-radius: 8px;
+  border-radius: 9px;
   font: inherit;
   font-size: 13px;
   color: var(--muted);
   cursor: pointer;
+  transition: color 0.15s, background 0.15s, box-shadow 0.15s;
 }
 
 .segmented button:hover { color: var(--fg); }
@@ -82,10 +85,10 @@ h2 { font-size: 15px; margin: 0 0 6px; }
   background: var(--surface);
   color: var(--fg);
   font-weight: 600;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm), var(--card-edge);
 }
 
-.swatches { display: flex; gap: 10px; align-items: center; height: 100%; }
+.swatches { display: flex; gap: 11px; align-items: center; height: 100%; }
 
 .swatch {
   width: 26px;
@@ -94,7 +97,9 @@ h2 { font-size: 15px; margin: 0 0 6px; }
   border: none;
   cursor: pointer;
   outline-offset: 3px;
-  transition: scale 0.12s;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: scale 0.15s;
 }
 
 .swatch:hover { scale: 1.15; }
@@ -156,12 +161,12 @@ input.label, textarea.value {
   width: 100%;
   padding: 7px 9px;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 9px;
   background: none;
   color: var(--fg);
   font: inherit;
   resize: vertical;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
 input.label { font-weight: 600; }
@@ -183,12 +188,16 @@ button.pin-btn, button.delete-btn {
   padding: 7px 4px;
   color: var(--faint);
   border-radius: 6px;
+  transition: color 0.15s;
 }
 
 button.pin-btn { font-size: 22px; padding: 3px 4px; line-height: 1; }
 
 button.pin-btn:hover { color: var(--accent); }
-button.pin-btn.pinned { color: var(--accent); }
+button.pin-btn.pinned {
+  color: var(--accent);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--accent) 60%, transparent);
+}
 button.delete-btn:hover { color: var(--danger); }
 
 .size-warning {
@@ -218,13 +227,13 @@ button.secondary {
   margin-top: 12px;
   padding: 8px 16px;
   border: 1px solid var(--border);
-  border-radius: 9px;
-  background: var(--bg);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
   color: var(--fg);
   cursor: pointer;
   font: inherit;
   font-weight: 500;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
 }
 
 button.secondary:hover {
@@ -241,17 +250,21 @@ button.secondary:hover {
 
 #save-bar {
   position: fixed;
-  bottom: 20px;
+  bottom: 22px;
   left: 50%;
   translate: -50% 0;
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 10px 12px 10px 18px;
-  border-radius: 12px;
-  background: var(--surface);
+  padding: 10px 12px 10px 20px;
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   border: 1px solid var(--accent-border);
-  box-shadow: var(--shadow-md);
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 4px color-mix(in srgb, var(--accent) 7%, transparent);
   font-size: 13px;
   font-weight: 600;
 }
@@ -259,12 +272,16 @@ button.secondary:hover {
 #save {
   padding: 8px 22px;
   border: none;
-  border-radius: 9px;
+  border-radius: 10px;
   background: var(--brand-gradient);
   color: #fff;
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 3px 10px color-mix(in srgb, var(--accent) 35%, transparent);
+  transition: filter 0.15s, translate 0.15s;
 }
 
-#save:hover { filter: brightness(1.08); }
+#save:hover { filter: brightness(1.07); translate: 0 -1px; }
