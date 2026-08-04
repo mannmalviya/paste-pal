@@ -232,3 +232,37 @@ button.secondary:hover {
 }
 
 .row-buttons { display: flex; gap: 10px; }
+
+/* ---------- save bar ---------- */
+
+#save-bar[hidden] { display: none; }
+
+#save-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px 10px 18px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--accent-border);
+  box-shadow: var(--shadow-md);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#save {
+  padding: 8px 22px;
+  border: none;
+  border-radius: 9px;
+  background: var(--brand-gradient);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#save:hover { filter: brightness(1.08); }

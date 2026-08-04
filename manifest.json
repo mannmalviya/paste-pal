@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Paste Pal",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "Your job-application details in a side panel: click to copy, right-click to fill fields or attach your resume.",
   "permissions": ["storage", "sidePanel", "contextMenus", "scripting"],
   "host_permissions": ["<all_urls>"],

@@ -50,7 +50,7 @@
     <section class="card">
       <h2>Entries</h2>
       <p class="sub">
-        Click any text to edit. Changes save as you type.
+        Click any text to edit, then hit <b>Save</b> to apply.
         &#9733; pinned entries appear in the right-click <b>Fill with</b> menu.
       </p>
       <ul id="entries"></ul>
@@ -80,6 +80,11 @@
         Keep it somewhere private.
       </p>
     </section>
+  </div>
+
+  <div id="save-bar" hidden>
+    <span>Unsaved changes</span>
+    <button id="save">Save</button>
   </div>
 
   <script src="../src/store.js"></script>

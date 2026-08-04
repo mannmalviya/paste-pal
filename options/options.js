@@ -75,6 +75,44 @@ autoPasteEl.addEventListener("change", () =>
 );
 
 // ---------- entries ----------
+//
+// Entry edits (text, pin, reorder, add, delete) buffer in memory and only
+// hit storage when Save is clicked. Resumes, appearance, and behavior
+// stay immediate since those are discrete one-click actions.
+
+const saveBar = document.getElementById("save-bar");
+const saveBtn = document.getElementById("save");
+let savedIds = new Set();
+
+function setDirty(dirty) {
+  saveBar.hidden = !dirty;
+}
+
+addEventListener("beforeunload", (e) => {
+  if (!saveBar.hidden) e.preventDefault();
+});
+
+saveBtn.addEventListener("click", async () => {
+  const tooBig = entries.filter((e) => entrySyncSize(e) > SYNC_ITEM_LIMIT);
+  if (tooBig.length) {
+    alert(
+      "These entries are too long to sync (8KB max each):\n\n" +
+        tooBig.map((e) => `- ${e.label || "(unnamed)"}`).join("\n") +
+        "\n\nTrim them down, then save again."
+    );
+    return;
+  }
+  entries.forEach((e, i) => (e.order = i));
+  const currentIds = new Set(entries.map((e) => e.id));
+  await Promise.all(
+    [...savedIds].filter((id) => !currentIds.has(id)).map(deleteEntry)
+  );
+  await Promise.all(entries.map(saveEntry));
+  savedIds = currentIds;
+  setDirty(false);
+  saveBtn.textContent = "Saved ✓";
+  setTimeout(() => (saveBtn.textContent = "Save"), 1200);
+});
 
 function debounce(fn, ms) {
   let t;
@@ -138,21 +176,19 @@ function entryRow(entry) {
   warning.className = "size-warning";
   warning.hidden = true;
 
-  const save = debounce(async () => {
+  const onEdit = () => {
     entry.label = label.value;
     entry.value = value.value;
     tile.innerHTML = iconFor(entry.label);
     const tooBig = entrySyncSize(entry) > SYNC_ITEM_LIMIT;
     warning.hidden = !tooBig;
     if (tooBig) {
-      warning.textContent =
-        "Too long to sync (8KB max per entry), so it was not saved. Trim it down.";
-      return;
+      warning.textContent = "Too long to sync (8KB max per entry). Trim it down.";
     }
-    await saveEntry(entry);
-  }, 400);
-  label.addEventListener("input", save);
-  value.addEventListener("input", save);
+    setDirty(true);
+  };
+  label.addEventListener("input", onEdit);
+  value.addEventListener("input", onEdit);
 
   const pin = document.createElement("button");
   pin.className = "pin-btn" + (entry.pinned ? " pinned" : "");
@@ -160,21 +196,21 @@ function entryRow(entry) {
   pin.title = entry.pinned
     ? "Pinned: shows in the right-click Fill menu"
     : "Pin to the right-click Fill menu";
-  pin.addEventListener("click", async () => {
+  pin.addEventListener("click", () => {
     entry.pinned = !entry.pinned;
     pin.classList.toggle("pinned", entry.pinned);
-    await saveEntry(entry);
+    setDirty(true);
   });
 
   const del = document.createElement("button");
   del.className = "delete-btn";
   del.textContent = "✕";
   del.title = "Delete entry";
-  del.addEventListener("click", async () => {
+  del.addEventListener("click", () => {
     if (!confirm(`Delete "${entry.label}"?`)) return;
-    await deleteEntry(entry.id);
     entries = entries.filter((e) => e.id !== entry.id);
     renderEntries();
+    setDirty(true);
   });
 
   li.append(handle, tile, label, value, pin, del);
@@ -182,7 +218,7 @@ function entryRow(entry) {
   return li;
 }
 
-async function reorder(fromId, toId) {
+function reorder(fromId, toId) {
   if (!fromId || fromId === toId) return;
   const fromIdx = entries.findIndex((e) => e.id === fromId);
   const toIdx = entries.findIndex((e) => e.id === toId);
@@ -190,11 +226,11 @@ async function reorder(fromId, toId) {
   const [moved] = entries.splice(fromIdx, 1);
   entries.splice(toIdx, 0, moved);
   entries.forEach((e, i) => (e.order = i));
-  await Promise.all(entries.map(saveEntry));
   renderEntries();
+  setDirty(true);
 }
 
-document.getElementById("add").addEventListener("click", async () => {
+document.getElementById("add").addEventListener("click", () => {
   const entry = {
     id: newId(),
     label: "",
@@ -203,9 +239,9 @@ document.getElementById("add").addEventListener("click", async () => {
     order: entries.length,
   };
   entries.push(entry);
-  await saveEntry(entry);
   renderEntries();
   entriesEl.querySelector("li:last-child input.label").focus();
+  setDirty(true);
 });
 
 // ---------- resumes ----------
@@ -321,12 +357,14 @@ importFileEl.addEventListener("change", async () => {
     return;
 
   await Promise.all([
-    ...entries.map((e) => deleteEntry(e.id)),
+    ...[...savedIds].map(deleteEntry),
     ...resumes.map((r) => deleteResume(r.id)),
   ]);
   entries = payload.entries.map((e, i) => ({ ...e, id: e.id || newId(), order: i }));
   resumes = (payload.resumes || []).map((r) => ({ ...r, id: r.id || newId() }));
   await Promise.all([...entries.map(saveEntry), ...resumes.map(saveResume)]);
+  savedIds = new Set(entries.map((e) => e.id));
+  setDirty(false);
   renderEntries();
   renderResumes();
   importFileEl.value = "";
@@ -338,6 +376,7 @@ importFileEl.addEventListener("change", async () => {
   initTheme();
   initAppearance();
   [entries, resumes] = await Promise.all([loadEntries(), loadResumes()]);
+  savedIds = new Set(entries.map((e) => e.id));
   renderEntries();
   renderResumes();
 })();
