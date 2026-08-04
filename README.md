@@ -1,3 +1,5 @@
+![Paste Pal: your info, one click, anywhere](Paste-Pal-Banner.png)
+
 # Paste Pal
 
 A Chrome extension that keeps all your job-application details one click away: name, email, LinkedIn, GitHub, portfolio, canned answers to "why do you want to work here?", and your resume PDFs.
