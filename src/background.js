@@ -11,8 +11,8 @@ chrome.runtime.onStartup.addListener(buildMenus);
 // ---------- context menus ----------
 //
 //   Paste Pal
-//     Fill with        ▸  (pinned entries with a value — editable fields only)
-//     Attach resume    ▸  (imported resumes — anywhere)
+//     Fill with        ▸  (pinned entries with a value; editable fields only)
+//     Attach resume    ▸  (imported resumes; anywhere)
 
 let menuBuild = Promise.resolve();
 
@@ -90,7 +90,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     );
   } else if (kind === "attach") {
     // The content script reads the resume out of chrome.storage.local
-    // itself — no need to push megabytes through a message.
+    // itself; no need to push megabytes through a message.
     chrome.tabs.sendMessage(tab.id, { type: "attach", resumeId: id }, target);
   }
 });

@@ -67,7 +67,7 @@ async function attach(resumeId) {
   const stored = await chrome.storage.local.get("r_" + resumeId);
   const resume = stored["r_" + resumeId];
   if (!resume) {
-    toast("Paste Pal: resume not found — re-import it in settings", true);
+    toast("Paste Pal: resume not found. Re-import it in settings", true);
     return;
   }
 
@@ -87,7 +87,7 @@ async function attach(resumeId) {
     return;
   }
 
-  // No file input in reach — treat the clicked element as a drop zone and
+  // No file input in reach, so treat the clicked element as a drop zone and
   // simulate the drag sequence react-dropzone-style widgets listen for.
   const zone = lastTarget || document.body;
   for (const type of ["dragenter", "dragover", "drop"]) {
@@ -100,7 +100,7 @@ async function attach(resumeId) {
     );
   }
   toast(
-    `Dropped ${resume.filename} — if nothing happened, use the file picker`,
+    `Dropped ${resume.filename}. If nothing happened, use the file picker`,
     false
   );
 }
@@ -110,7 +110,7 @@ function findFileInput(el) {
   if (el.matches?.('input[type="file"]')) return el;
   const inside = el.querySelector?.('input[type="file"]');
   if (inside) return inside;
-  // Upload widgets usually hide the real input near the visible button —
+  // Upload widgets usually hide the real input near the visible button,
   // walk up a few levels and search each subtree. Stop before <body>:
   // from there a query would grab unrelated file inputs elsewhere on the
   // page, and ambiguous matches are worse than falling back to a drop.
