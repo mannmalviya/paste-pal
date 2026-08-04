@@ -156,7 +156,16 @@ for (const id of ["settings", "empty-settings"]) {
     .getElementById(id)
     .addEventListener("click", () => chrome.runtime.openOptionsPage());
 }
-chrome.storage.onChanged.addListener(refresh);
+chrome.storage.onChanged.addListener((changes, area) => {
+  // Only rebuild the list when entries or resumes actually change.
+  // Rebuilding on every key (theme, armed, ...) would destroy the row
+  // mid-"Copied" animation, since arming writes storage on copy.
+  if (area === "local" && "armed" in changes) renderArmed();
+  const dataChanged = Object.keys(changes).some(
+    (k) => k.startsWith("e_") || k.startsWith("r_")
+  );
+  if (dataChanged) refresh();
+});
 
 initTheme();
 refresh();

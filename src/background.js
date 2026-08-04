@@ -7,7 +7,25 @@ chrome.runtime.onInstalled.addListener(async () => {
   await seedIfEmpty();
   await migrate();
   buildMenus();
+  reinjectContentScripts();
 });
+
+// Manifest content scripts only reach pages loaded after this version.
+// Tabs that were already open keep an orphaned pre-update copy that can't
+// talk to the extension anymore, so fill/attach/auto-paste silently die
+// there. Re-inject the current script so updates don't require reloading
+// every tab.
+async function reinjectContentScripts() {
+  const tabs = await chrome.tabs.query({ url: ["http://*/*", "https://*/*"] });
+  await Promise.allSettled(
+    tabs.map((tab) =>
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id, allFrames: true },
+        files: ["src/content.js"],
+      })
+    )
+  );
+}
 
 // One-shot additions for installs that predate newer seed entries.
 async function migrate() {
