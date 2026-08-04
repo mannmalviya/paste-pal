@@ -18,15 +18,7 @@ header {
 .brand-mark {
   width: 26px;
   height: 26px;
-  border-radius: 8px;
-  background: var(--brand-gradient);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  display: grid;
-  place-items: center;
-  box-shadow: var(--shadow-sm);
+  display: block;
 }
 
 .brand-name {

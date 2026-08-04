@@ -12,14 +12,7 @@ body { font-size: 14px; line-height: 1.5; }
 .hero .brand-mark {
   width: 46px;
   height: 46px;
-  border-radius: 14px;
-  background: var(--brand-gradient);
-  color: #fff;
-  font-size: 17px;
-  font-weight: 800;
-  display: grid;
-  place-items: center;
-  box-shadow: var(--shadow-md);
+  display: block;
 }
 
 h1 {
