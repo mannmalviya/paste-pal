@@ -111,12 +111,16 @@ function findFileInput(el) {
   const inside = el.querySelector?.('input[type="file"]');
   if (inside) return inside;
   // Upload widgets usually hide the real input near the visible button —
-  // walk up a few levels and search each subtree.
+  // walk up a few levels and search each subtree. Stop before <body>:
+  // from there a query would grab unrelated file inputs elsewhere on the
+  // page, and ambiguous matches are worse than falling back to a drop.
   let node = el;
   for (let i = 0; i < 6 && node.parentElement; i++) {
     node = node.parentElement;
-    const found = node.querySelector('input[type="file"]');
-    if (found) return found;
+    if (node === document.body || node === document.documentElement) break;
+    const found = node.querySelectorAll('input[type="file"]');
+    if (found.length === 1) return found[0];
+    if (found.length > 1) break;
   }
   return null;
 }

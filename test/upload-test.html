@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Paste Pal test page</title>
+  <style>
+    body { font: 15px system-ui, sans-serif; max-width: 640px; margin: 40px auto; }
+    section { margin-bottom: 28px; }
+    label { display: block; font-weight: 600; margin-bottom: 4px; }
+    input[type="text"], textarea { width: 100%; padding: 8px; }
+    #dropzone {
+      border: 2px dashed #999; border-radius: 8px; padding: 32px;
+      text-align: center; color: #666;
+    }
+    #hidden-wrap input[type="file"] { display: none; }
+    #hidden-wrap button { padding: 8px 16px; }
+    #log { background: #f3f4f6; padding: 12px; border-radius: 8px;
+           font-family: monospace; font-size: 13px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Paste Pal test page</h1>
+
+  <section>
+    <label for="plain-input">Plain text input</label>
+    <input id="plain-input" type="text" />
+  </section>
+
+  <section>
+    <label for="plain-textarea">Textarea</label>
+    <textarea id="plain-textarea" rows="3"></textarea>
+  </section>
+
+  <section>
+    <label>Contenteditable</label>
+    <div id="editable" contenteditable="true"
+         style="border:1px solid #ccc; padding:8px; min-height:40px"></div>
+  </section>
+
+  <section>
+    <label for="visible-file">Visible file input</label>
+    <input id="visible-file" type="file" />
+  </section>
+
+  <section id="hidden-wrap">
+    <label>Styled upload button (hidden file input, like most ATSes)</label>
+    <button type="button">Upload resume</button>
+    <input id="hidden-file" type="file" />
+  </section>
+
+  <section>
+    <label>Dropzone (no file input at all)</label>
+    <div id="dropzone">Drop your resume here</div>
+  </section>
+
+  <h2>Event log</h2>
+  <div id="log"></div>
+
+  <script>
+    const log = (m) =>
+      (document.getElementById("log").textContent += m + "\n");
+
+    for (const id of ["plain-input", "plain-textarea"]) {
+      const el = document.getElementById(id);
+      el.addEventListener("input", () => log(`${id} input event: "${el.value}"`));
+      el.addEventListener("change", () => log(`${id} change event`));
+    }
+    for (const id of ["visible-file", "hidden-file"]) {
+      const el = document.getElementById(id);
+      el.addEventListener("change", () =>
+        log(`${id} change: ${el.files[0]?.name ?? "no file"} (${el.files[0]?.size ?? 0} bytes)`)
+      );
+    }
+    const zone = document.getElementById("dropzone");
+    zone.addEventListener("dragover", (e) => e.preventDefault());
+    zone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const f = e.dataTransfer.files[0];
+      log(`dropzone drop: ${f?.name ?? "no file"} (${f?.size ?? 0} bytes)`);
+    });
+  </script>
+</body>
+</html>
