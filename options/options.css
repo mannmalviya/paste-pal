@@ -185,6 +185,8 @@ button.pin-btn, button.delete-btn {
   border-radius: 6px;
 }
 
+button.pin-btn { font-size: 22px; padding: 3px 4px; line-height: 1; }
+
 button.pin-btn:hover { color: var(--accent); }
 button.pin-btn.pinned { color: var(--accent); }
 button.delete-btn:hover { color: var(--danger); }
