@@ -5,6 +5,65 @@ let entries = [];
 let resumes = [];
 let dragId = null;
 
+// ---------- appearance ----------
+
+const SWATCH_COLORS = {
+  indigo: "#4f46e5",
+  violet: "#7c3aed",
+  emerald: "#059669",
+  rose: "#e11d48",
+  amber: "#d97706",
+};
+
+async function initAppearance() {
+  const theme = await loadTheme();
+
+  const modeButtons = [...document.querySelectorAll("#mode-picker button")];
+  const renderMode = () =>
+    modeButtons.forEach((b) =>
+      b.classList.toggle("active", b.dataset.mode === theme.mode)
+    );
+  modeButtons.forEach((b) =>
+    b.addEventListener("click", async () => {
+      theme.mode = b.dataset.mode;
+      renderMode();
+      applyTheme(theme);
+      await saveTheme(theme);
+    })
+  );
+  renderMode();
+
+  const picker = document.getElementById("accent-picker");
+  const swatches = ACCENTS.map((name) => {
+    const b = document.createElement("button");
+    b.className = "swatch";
+    b.style.background = SWATCH_COLORS[name];
+    b.title = name[0].toUpperCase() + name.slice(1);
+    b.addEventListener("click", async () => {
+      theme.accent = name;
+      swatches.forEach((s) => s.classList.toggle("active", s === b));
+      applyTheme(theme);
+      await saveTheme(theme);
+    });
+    return b;
+  });
+  const renderAccent = () =>
+    swatches.forEach((s, i) =>
+      s.classList.toggle("active", ACCENTS[i] === theme.accent)
+    );
+  renderAccent();
+  picker.replaceChildren(...swatches);
+
+  // Keep the pickers in sync when the theme changes elsewhere
+  // (another window, or synced in from another machine).
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== "sync" || !changes.theme) return;
+    Object.assign(theme, DEFAULT_THEME, changes.theme.newValue);
+    renderMode();
+    renderAccent();
+  });
+}
+
 // ---------- entries ----------
 
 function debounce(fn, ms) {
@@ -13,6 +72,13 @@ function debounce(fn, ms) {
     clearTimeout(t);
     t = setTimeout(() => fn(...args), ms);
   };
+}
+
+function iconTile(html) {
+  const tile = document.createElement("div");
+  tile.className = "icon-tile";
+  tile.innerHTML = html; // static SVG strings from icons.js, never user data
+  return tile;
 }
 
 function renderEntries() {
@@ -45,6 +111,8 @@ function entryRow(entry) {
     reorder(dragId, entry.id);
   });
 
+  const tile = iconTile(iconFor(entry.label));
+
   const label = document.createElement("input");
   label.className = "label";
   label.value = entry.label;
@@ -53,7 +121,7 @@ function entryRow(entry) {
   const value = document.createElement("textarea");
   value.className = "value";
   value.value = entry.value;
-  value.placeholder = "Value — can be several paragraphs";
+  value.placeholder = "Value (can be several paragraphs)";
   value.rows = Math.min(6, Math.max(1, entry.value.split("\n").length));
 
   const warning = document.createElement("div");
@@ -63,11 +131,12 @@ function entryRow(entry) {
   const save = debounce(async () => {
     entry.label = label.value;
     entry.value = value.value;
+    tile.innerHTML = iconFor(entry.label);
     const tooBig = entrySyncSize(entry) > SYNC_ITEM_LIMIT;
     warning.hidden = !tooBig;
     if (tooBig) {
       warning.textContent =
-        "Too long to sync (8KB max per entry) — not saved. Trim it down.";
+        "Too long to sync (8KB max per entry), so it was not saved. Trim it down.";
       return;
     }
     await saveEntry(entry);
@@ -79,7 +148,7 @@ function entryRow(entry) {
   pin.className = "pin-btn" + (entry.pinned ? " pinned" : "");
   pin.textContent = "★";
   pin.title = entry.pinned
-    ? "Pinned — shows in the right-click Fill menu"
+    ? "Pinned: shows in the right-click Fill menu"
     : "Pin to the right-click Fill menu";
   pin.addEventListener("click", async () => {
     entry.pinned = !entry.pinned;
@@ -98,7 +167,7 @@ function entryRow(entry) {
     renderEntries();
   });
 
-  li.append(handle, label, value, pin, del);
+  li.append(handle, tile, label, value, pin, del);
   li.append(warning);
   return li;
 }
@@ -137,6 +206,8 @@ function renderResumes() {
       const li = document.createElement("li");
       li.className = "resume";
 
+      const tile = iconTile(ICONS.file);
+
       const label = document.createElement("input");
       label.className = "label";
       label.value = resume.label;
@@ -164,7 +235,7 @@ function renderResumes() {
         renderResumes();
       });
 
-      li.append(label, file, del);
+      li.append(tile, label, file, del);
       return li;
     })
   );
@@ -179,7 +250,7 @@ resumeFileEl.addEventListener("change", async () => {
   const file = resumeFileEl.files[0];
   if (!file) return;
   if (file.size > 5 * 1024 * 1024) {
-    alert("That file is over 5MB — resumes should be much smaller.");
+    alert("That file is over 5MB. Resumes should be much smaller.");
     return;
   }
   const data = await new Promise((resolve) => {
@@ -254,6 +325,8 @@ importFileEl.addEventListener("change", async () => {
 // ---------- init ----------
 
 (async () => {
+  initTheme();
+  initAppearance();
   [entries, resumes] = await Promise.all([loadEntries(), loadResumes()]);
   renderEntries();
   renderResumes();

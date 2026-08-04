@@ -3,12 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <title>Paste Pal</title>
+  <link rel="stylesheet" href="../src/theme.css" />
   <link rel="stylesheet" href="panel.css" />
 </head>
 <body>
   <header>
-    <input id="search" type="search" placeholder="Filter… " autofocus />
-    <button id="settings" title="Edit entries">⚙</button>
+    <div class="brand">
+      <div class="brand-mark">PP</div>
+      <span class="brand-name">Paste Pal</span>
+      <button id="settings" title="Edit entries">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <div class="search-wrap">
+      <span id="search-icon"></span>
+      <input id="search" type="search" placeholder="Filter entries" autofocus />
+    </div>
   </header>
 
   <main>
@@ -17,7 +27,10 @@
     <section id="resumes-section" hidden>
       <h2>Resumes</h2>
       <ul id="resumes"></ul>
-      <p class="hint">Right-click an upload area on any page → <b>Paste Pal → Attach resume</b>.</p>
+      <p class="hint">
+        Right-click an upload area on any page, then
+        <b>Paste Pal &rsaquo; Attach resume</b>.
+      </p>
     </section>
 
     <div id="empty" hidden>
@@ -27,6 +40,8 @@
   </main>
 
   <script src="../src/store.js"></script>
+  <script src="../src/theme.js"></script>
+  <script src="../src/icons.js"></script>
   <script src="panel.js"></script>
 </body>
 </html>

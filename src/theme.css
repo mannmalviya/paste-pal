@@ -1,0 +1,95 @@
+/* Shared design tokens for the panel and options pages.
+   Theme mode (light/dark/system) and accent are chosen in settings and
+   applied by theme.js as data-theme / data-accent on <html>. */
+
+:root {
+  --bg: #f7f7fb;
+  --surface: #ffffff;
+  --fg: #1a1d27;
+  --muted: #6b7280;
+  --faint: #9ca3af;
+  --border: #e6e7ee;
+  --hover: #f1f2f8;
+  --danger: #dc2626;
+  --success: #16a34a;
+  --success-soft: #f0fdf4;
+  --shadow-sm: 0 1px 2px rgba(16, 18, 27, 0.05);
+  --shadow-md: 0 4px 16px rgba(16, 18, 27, 0.08);
+  --accent: var(--accent-light, #4f46e5);
+  --accent-mix: var(--accent-mix-light, #9333ea);
+}
+
+:root[data-theme="dark"] {
+  --bg: #131620;
+  --surface: #1b1f2c;
+  --fg: #e7e9f0;
+  --muted: #9aa1b2;
+  --faint: #6b7280;
+  --border: #2a2f3e;
+  --hover: #232838;
+  --danger: #f87171;
+  --success: #4ade80;
+  --success-soft: rgba(74, 222, 128, 0.12);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --accent: var(--accent-dark, #818cf8);
+  --accent-mix: var(--accent-mix-dark, #c084fc);
+}
+
+:root[data-accent="indigo"] {
+  --accent-light: #4f46e5; --accent-dark: #818cf8;
+  --accent-mix-light: #9333ea; --accent-mix-dark: #c084fc;
+}
+:root[data-accent="violet"] {
+  --accent-light: #7c3aed; --accent-dark: #a78bfa;
+  --accent-mix-light: #db2777; --accent-mix-dark: #f472b6;
+}
+:root[data-accent="emerald"] {
+  --accent-light: #059669; --accent-dark: #34d399;
+  --accent-mix-light: #0891b2; --accent-mix-dark: #22d3ee;
+}
+:root[data-accent="rose"] {
+  --accent-light: #e11d48; --accent-dark: #fb7185;
+  --accent-mix-light: #ea580c; --accent-mix-dark: #fb923c;
+}
+:root[data-accent="amber"] {
+  --accent-light: #d97706; --accent-dark: #fbbf24;
+  --accent-mix-light: #dc2626; --accent-mix-dark: #f87171;
+}
+
+:root {
+  --accent-soft: color-mix(in srgb, var(--accent) 11%, transparent);
+  --accent-softer: color-mix(in srgb, var(--accent) 6%, transparent);
+  --accent-border: color-mix(in srgb, var(--accent) 35%, transparent);
+  --brand-gradient: linear-gradient(135deg, var(--accent), var(--accent-mix));
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Icon tile shown next to each entry label */
+.icon-tile {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.icon-tile svg { width: 16px; height: 16px; }
+
+.icon-tile.success {
+  background: var(--success-soft);
+  color: var(--success);
+}

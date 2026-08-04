@@ -2,49 +2,76 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Paste Pal — Settings</title>
+  <title>Paste Pal Settings</title>
+  <link rel="stylesheet" href="../src/theme.css" />
   <link rel="stylesheet" href="options.css" />
 </head>
 <body>
   <div class="page">
-    <h1>Paste Pal</h1>
-    <p class="sub">
-      Click a row's text to edit — changes save as you type.
-      ★ pinned entries show up in the right-click <b>Fill with</b> menu.
-    </p>
+    <header class="hero">
+      <div class="brand-mark">PP</div>
+      <div>
+        <h1>Paste Pal</h1>
+        <p class="sub">Everything a job application asks for, one click away.</p>
+      </div>
+    </header>
 
-    <section>
+    <section class="card">
+      <h2>Appearance</h2>
+      <div class="appearance-row">
+        <div class="control-group">
+          <span class="control-label">Theme</span>
+          <div class="segmented" id="mode-picker" role="radiogroup">
+            <button data-mode="system">System</button>
+            <button data-mode="light">Light</button>
+            <button data-mode="dark">Dark</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <span class="control-label">Accent</span>
+          <div class="swatches" id="accent-picker"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
       <h2>Entries</h2>
+      <p class="sub">
+        Click any text to edit. Changes save as you type.
+        &#9733; pinned entries appear in the right-click <b>Fill with</b> menu.
+      </p>
       <ul id="entries"></ul>
       <button id="add" class="secondary">+ Add entry</button>
     </section>
 
-    <section>
+    <section class="card">
       <h2>Resumes</h2>
       <p class="sub">
         Stored locally on this computer. Right-click an upload area on any
-        job-application page → <b>Paste Pal → Attach resume</b>.
+        job-application page, then <b>Paste Pal &rsaquo; Attach resume</b>.
       </p>
       <ul id="resumes"></ul>
-      <button id="import-resume" class="secondary">+ Import PDF…</button>
+      <button id="import-resume" class="secondary">+ Import PDF</button>
       <input id="resume-file" type="file" accept=".pdf,.doc,.docx" hidden />
     </section>
 
-    <section>
+    <section class="card">
       <h2>Backup</h2>
       <div class="row-buttons">
-        <button id="export" class="secondary">Export everything…</button>
-        <button id="import" class="secondary">Import backup…</button>
+        <button id="export" class="secondary">Export everything</button>
+        <button id="import" class="secondary">Import backup</button>
         <input id="import-file" type="file" accept=".json" hidden />
       </div>
       <p class="sub">
-        The export file contains every entry and resume in plain text —
-        keep it somewhere private.
+        The export file contains every entry and resume in plain text.
+        Keep it somewhere private.
       </p>
     </section>
   </div>
 
   <script src="../src/store.js"></script>
+  <script src="../src/theme.js"></script>
+  <script src="../src/icons.js"></script>
   <script src="options.js"></script>
 </body>
 </html>
