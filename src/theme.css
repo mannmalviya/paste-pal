@@ -1,39 +1,58 @@
 /* Shared design tokens for the panel and options pages.
    Theme mode (light/dark/system) and accent are chosen in settings and
-   applied by theme.js as data-theme / data-accent on <html>. */
+   applied by theme.js as data-theme / data-accent on <html>.
+
+   Look: warm "paper" neutrals faintly tinted by the accent, a soft
+   film-grain overlay, and an ambient accent glow behind the content. */
 
 :root {
-  --bg: #f7f7fb;
-  --surface: #ffffff;
-  --fg: #1a1d27;
-  --muted: #6b7280;
-  --faint: #9ca3af;
-  --border: #e6e7ee;
-  --hover: #f1f2f8;
-  --danger: #dc2626;
-  --success: #16a34a;
-  --success-soft: #f0fdf4;
-  --shadow-sm: 0 1px 2px rgba(16, 18, 27, 0.05);
-  --shadow-md: 0 4px 16px rgba(16, 18, 27, 0.08);
+  --paper: #f4f2ed;
+  --bg: color-mix(in srgb, var(--accent) 4%, var(--paper));
+  --surface: color-mix(in srgb, var(--accent) 2%, #fffefb);
+  --fg: #211e1a;
+  --muted: #6f6a61;
+  --faint: #a49d91;
+  --border: color-mix(in srgb, var(--fg) 11%, transparent);
+  --hover: color-mix(in srgb, var(--fg) 5%, transparent);
+  --danger: #d43d2a;
+  --success: #178a4c;
+  --success-soft: color-mix(in srgb, var(--success) 10%, transparent);
+  --shadow-sm:
+    0 1px 2px rgba(35, 30, 22, 0.05),
+    0 2px 8px rgba(35, 30, 22, 0.04);
+  --shadow-md:
+    0 2px 6px rgba(35, 30, 22, 0.06),
+    0 12px 32px rgba(35, 30, 22, 0.12);
+  --card-edge: inset 0 1px 0 rgba(255, 255, 255, 0.7);
   --accent: var(--accent-light, #4f46e5);
   --accent-mix: var(--accent-mix-light, #9333ea);
+  --grain-opacity: 0.06;
+  --glow-opacity: 1;
 }
 
 :root[data-theme="dark"] {
-  --bg: #131620;
-  --surface: #1b1f2c;
-  --fg: #e7e9f0;
-  --muted: #9aa1b2;
-  --faint: #6b7280;
-  --border: #2a2f3e;
-  --hover: #232838;
-  --danger: #f87171;
-  --success: #4ade80;
-  --success-soft: rgba(74, 222, 128, 0.12);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --paper: #171512;
+  --bg: color-mix(in srgb, var(--accent) 5%, var(--paper));
+  --surface: color-mix(in srgb, var(--accent) 4%, #201d19);
+  --fg: #ece8e1;
+  --muted: #a49d91;
+  --faint: #746e63;
+  --border: color-mix(in srgb, var(--fg) 12%, transparent);
+  --hover: color-mix(in srgb, var(--fg) 6%, transparent);
+  --danger: #f4705e;
+  --success: #4cc57e;
+  --success-soft: color-mix(in srgb, var(--success) 13%, transparent);
+  --shadow-sm:
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md:
+    0 2px 6px rgba(0, 0, 0, 0.4),
+    0 16px 40px rgba(0, 0, 0, 0.5);
+  --card-edge: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --accent: var(--accent-dark, #818cf8);
   --accent-mix: var(--accent-mix-dark, #c084fc);
+  --grain-opacity: 0.07;
+  --glow-opacity: 0.6;
 }
 
 :root[data-accent="indigo"] {
@@ -71,8 +90,42 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Ambient accent glow washing in from the top of the page. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--glow-opacity);
+  background:
+    radial-gradient(
+      60% 44% at 18% -12%,
+      color-mix(in srgb, var(--accent) 13%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      52% 38% at 88% -14%,
+      color-mix(in srgb, var(--accent-mix) 10%, transparent),
+      transparent 70%
+    );
+}
+
+/* Soft film grain over everything (SVG turbulence, tiled). */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
 }
 
 /* Icon tile shown next to each entry label */
@@ -82,9 +135,10 @@ body {
   height: 30px;
   display: grid;
   place-items: center;
-  border-radius: 9px;
+  border-radius: 10px;
   background: var(--accent-soft);
   color: var(--accent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
 .icon-tile svg { width: 16px; height: 16px; }
@@ -92,4 +146,5 @@ body {
 .icon-tile.success {
   background: var(--success-soft);
   color: var(--success);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--success) 20%, transparent);
 }
