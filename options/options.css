@@ -34,28 +34,18 @@ h2 { font-size: 17px; font-weight: 600; margin: 0 0 6px; }
   color: var(--faint);
 }
 
-.segmented {
-  display: inline-flex;
+#mode-toggle {
   border: 1px solid var(--fg);
+  background: none;
+  padding: 7px 28px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--fg);
+  cursor: pointer;
   width: fit-content;
 }
 
-.segmented button {
-  border: none;
-  background: none;
-  padding: 7px 24px;
-  font: inherit;
-  font-size: 14px;
-  color: var(--muted);
-  cursor: pointer;
-}
-
-.segmented button:hover { color: var(--fg); }
-
-.segmented button.active {
-  background: var(--fg);
-  color: var(--bg);
-}
+#mode-toggle:hover { background: var(--fg); color: var(--bg); }
 
 /* ---------- behavior ---------- */
 
@@ -122,6 +112,9 @@ textarea.value {
   font-family: var(--mono);
   font-size: 12.5px;
   line-height: 1.5;
+  field-sizing: content;
+  resize: none;
+  overflow: hidden;
 }
 
 input.label:hover, textarea.value:hover { border-color: var(--border); }
@@ -136,11 +129,12 @@ button.pin-btn, button.delete-btn {
   background: none;
   cursor: pointer;
   font-size: 14px;
-  padding: 7px 4px;
+  padding: 8px 4px;
+  line-height: 1;
   color: var(--faint);
 }
 
-button.pin-btn { font-size: 19px; padding: 4px; line-height: 1; }
+button.pin-btn { font-size: 16px; padding: 7px 4px; width: 26px; }
 
 button.pin-btn:hover { color: var(--fg); }
 button.pin-btn.pinned { color: var(--fg); }

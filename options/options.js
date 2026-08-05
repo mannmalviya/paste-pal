@@ -10,22 +10,18 @@ let dragId = null;
 async function initAppearance() {
   const theme = await loadTheme();
 
-  const modeButtons = [...document.querySelectorAll("#mode-picker button")];
+  const toggle = document.getElementById("mode-toggle");
   const renderMode = () =>
-    modeButtons.forEach((b) =>
-      b.classList.toggle("active", b.dataset.mode === theme.mode)
-    );
-  modeButtons.forEach((b) =>
-    b.addEventListener("click", async () => {
-      theme.mode = b.dataset.mode;
-      renderMode();
-      applyTheme(theme);
-      await saveTheme(theme);
-    })
-  );
+    (toggle.textContent = theme.mode === "dark" ? "Dark" : "Light");
+  toggle.addEventListener("click", async () => {
+    theme.mode = theme.mode === "dark" ? "light" : "dark";
+    renderMode();
+    applyTheme(theme);
+    await saveTheme(theme);
+  });
   renderMode();
 
-  // Keep the picker in sync when the theme changes elsewhere
+  // Keep the toggle in sync when the theme changes elsewhere
   // (another window, or synced in from another machine).
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "sync" || !changes.theme) return;
@@ -162,14 +158,17 @@ function entryRow(entry) {
   value.addEventListener("input", onEdit);
 
   const pin = document.createElement("button");
-  pin.className = "pin-btn" + (entry.pinned ? " pinned" : "");
-  pin.textContent = "★";
-  pin.title = entry.pinned
-    ? "Pinned: shows in the right-click Fill menu"
-    : "Pin to the right-click Fill menu";
+  const renderPin = () => {
+    pin.className = "pin-btn" + (entry.pinned ? " pinned" : "");
+    pin.textContent = entry.pinned ? "★" : "☆";
+    pin.title = entry.pinned
+      ? "Pinned: shows in the right-click Fill menu"
+      : "Pin to the right-click Fill menu";
+  };
+  renderPin();
   pin.addEventListener("click", () => {
     entry.pinned = !entry.pinned;
-    pin.classList.toggle("pinned", entry.pinned);
+    renderPin();
     setDirty(true);
   });
 

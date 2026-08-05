@@ -17,6 +17,7 @@ const SEED_ENTRIES = [
   { label: "First name", pinned: false },
   { label: "Last name", pinned: false },
   { label: "Email", pinned: true },
+  { label: "School email", pinned: false },
   { label: "Phone", pinned: true },
   { label: "LinkedIn", pinned: true },
   { label: "GitHub", pinned: true },
@@ -24,8 +25,6 @@ const SEED_ENTRIES = [
   { label: "X", pinned: true },
   { label: "School", pinned: false },
   { label: "Graduation date", pinned: false },
-  { label: "Work authorization", pinned: false },
-  { label: "Needs sponsorship", pinned: false },
 ];
 
 function newId() {
