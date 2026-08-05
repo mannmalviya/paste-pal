@@ -1,13 +1,22 @@
 // Theme handling shared by the panel and options pages.
-// Stored in chrome.storage.sync under "theme": { mode, accent }.
-// mode: "system" | "light" | "dark"    accent: see ACCENTS.
+// Stored in chrome.storage.sync under "theme": { mode }.
+// mode: "light" | "dark"
 
-const ACCENTS = ["indigo", "violet", "emerald", "rose", "amber"];
-const DEFAULT_THEME = { mode: "system", accent: "indigo" };
+const DEFAULT_THEME = { mode: "light" };
+
+// Older versions stored mode "system"; resolve it to a concrete choice.
+function normalizeMode(mode) {
+  if (mode === "system")
+    return matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  return mode === "dark" ? "dark" : "light";
+}
 
 async function loadTheme() {
   const { theme } = await chrome.storage.sync.get("theme");
-  return { ...DEFAULT_THEME, ...theme };
+  const merged = { ...DEFAULT_THEME, ...theme };
+  return { mode: normalizeMode(merged.mode) };
 }
 
 async function saveTheme(theme) {
@@ -15,18 +24,11 @@ async function saveTheme(theme) {
 }
 
 function applyTheme(theme) {
-  const systemDark = matchMedia("(prefers-color-scheme: dark)").matches;
-  const dark = theme.mode === "dark" || (theme.mode === "system" && systemDark);
-  document.documentElement.dataset.theme = dark ? "dark" : "light";
-  document.documentElement.dataset.accent = theme.accent;
+  document.documentElement.dataset.theme = normalizeMode(theme.mode);
 }
 
 async function initTheme() {
   applyTheme(await loadTheme());
-  matchMedia("(prefers-color-scheme: dark)").addEventListener(
-    "change",
-    async () => applyTheme(await loadTheme())
-  );
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area === "sync" && changes.theme)
       applyTheme({ ...DEFAULT_THEME, ...changes.theme.newValue });

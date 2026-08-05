@@ -7,14 +7,6 @@ let dragId = null;
 
 // ---------- appearance ----------
 
-const SWATCH_COLORS = {
-  indigo: "#4f46e5",
-  violet: "#7c3aed",
-  emerald: "#059669",
-  rose: "#e11d48",
-  amber: "#d97706",
-};
-
 async function initAppearance() {
   const theme = await loadTheme();
 
@@ -33,34 +25,13 @@ async function initAppearance() {
   );
   renderMode();
 
-  const picker = document.getElementById("accent-picker");
-  const swatches = ACCENTS.map((name) => {
-    const b = document.createElement("button");
-    b.className = "swatch";
-    b.style.background = SWATCH_COLORS[name];
-    b.title = name[0].toUpperCase() + name.slice(1);
-    b.addEventListener("click", async () => {
-      theme.accent = name;
-      swatches.forEach((s) => s.classList.toggle("active", s === b));
-      applyTheme(theme);
-      await saveTheme(theme);
-    });
-    return b;
-  });
-  const renderAccent = () =>
-    swatches.forEach((s, i) =>
-      s.classList.toggle("active", ACCENTS[i] === theme.accent)
-    );
-  renderAccent();
-  picker.replaceChildren(...swatches);
-
-  // Keep the pickers in sync when the theme changes elsewhere
+  // Keep the picker in sync when the theme changes elsewhere
   // (another window, or synced in from another machine).
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "sync" || !changes.theme) return;
     Object.assign(theme, DEFAULT_THEME, changes.theme.newValue);
+    theme.mode = normalizeMode(theme.mode);
     renderMode();
-    renderAccent();
   });
 }
 
