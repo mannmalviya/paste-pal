@@ -156,7 +156,27 @@ for (const id of ["settings", "empty-settings"]) {
     .getElementById(id)
     .addEventListener("click", () => chrome.runtime.openOptionsPage());
 }
+
+// Sun/moon theme toggle: the icon shows the mode you'd switch to.
+const themeToggle = document.getElementById("theme-toggle");
+
+async function renderThemeToggle() {
+  const { mode } = await loadTheme();
+  themeToggle.innerHTML = mode === "dark" ? ICONS.sun : ICONS.moon;
+  themeToggle.title =
+    mode === "dark" ? "Switch to light mode" : "Switch to dark mode";
+}
+
+themeToggle.addEventListener("click", async () => {
+  const theme = await loadTheme();
+  theme.mode = theme.mode === "dark" ? "light" : "dark";
+  applyTheme(theme);
+  await saveTheme(theme);
+  renderThemeToggle();
+});
+
 chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "sync" && changes.theme) renderThemeToggle();
   // Only rebuild the list when entries or resumes actually change.
   // Rebuilding on every key (theme, armed, ...) would destroy the row
   // mid-"Copied" animation, since arming writes storage on copy.
@@ -168,4 +188,5 @@ chrome.storage.onChanged.addListener((changes, area) => {
 });
 
 initTheme();
+renderThemeToggle();
 refresh();

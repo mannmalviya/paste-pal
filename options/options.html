@@ -18,7 +18,11 @@
       <div class="appearance-row">
         <div class="control-group">
           <span class="control-label">Theme</span>
-          <button id="mode-toggle" title="Switch between light and dark"></button>
+          <div class="mode-slider" id="mode-slider" role="radiogroup">
+            <span class="thumb"></span>
+            <button data-mode="light">Light</button>
+            <button data-mode="dark">Dark</button>
+          </div>
         </div>
       </div>
     </section>

@@ -20,8 +20,7 @@ header {
   font-weight: 600;
 }
 
-#settings {
-  margin-left: auto;
+#theme-toggle, #settings {
   border: none;
   background: none;
   cursor: pointer;
@@ -31,8 +30,10 @@ header {
   place-items: center;
 }
 
-#settings svg { width: 16px; height: 16px; }
-#settings:hover { color: var(--fg); }
+#theme-toggle { margin-left: auto; }
+
+#theme-toggle svg, #settings svg { width: 16px; height: 16px; }
+#theme-toggle:hover, #settings:hover { color: var(--fg); }
 
 main { padding: 0 0 16px; }
 

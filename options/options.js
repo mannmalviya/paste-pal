@@ -10,15 +10,23 @@ let dragId = null;
 async function initAppearance() {
   const theme = await loadTheme();
 
-  const toggle = document.getElementById("mode-toggle");
-  const renderMode = () =>
-    (toggle.textContent = theme.mode === "dark" ? "Dark" : "Light");
-  toggle.addEventListener("click", async () => {
-    theme.mode = theme.mode === "dark" ? "light" : "dark";
-    renderMode();
-    applyTheme(theme);
-    await saveTheme(theme);
-  });
+  const slider = document.getElementById("mode-slider");
+  const modeButtons = [...slider.querySelectorAll("button")];
+  const renderMode = () => {
+    slider.dataset.mode = theme.mode;
+    modeButtons.forEach((b) =>
+      b.classList.toggle("active", b.dataset.mode === theme.mode)
+    );
+  };
+  modeButtons.forEach((b) =>
+    b.addEventListener("click", async () => {
+      if (theme.mode === b.dataset.mode) return;
+      theme.mode = b.dataset.mode;
+      renderMode();
+      applyTheme(theme);
+      await saveTheme(theme);
+    })
+  );
   renderMode();
 
   // Keep the toggle in sync when the theme changes elsewhere

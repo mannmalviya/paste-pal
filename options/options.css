@@ -34,18 +34,40 @@ h2 { font-size: 17px; font-weight: 600; margin: 0 0 6px; }
   color: var(--faint);
 }
 
-#mode-toggle {
+.mode-slider {
+  position: relative;
+  display: inline-flex;
   border: 1px solid var(--fg);
-  background: none;
-  padding: 7px 28px;
-  font: inherit;
-  font-size: 14px;
-  color: var(--fg);
-  cursor: pointer;
   width: fit-content;
 }
 
-#mode-toggle:hover { background: var(--fg); color: var(--bg); }
+.mode-slider .thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: var(--fg);
+  transition: translate 0.22s ease;
+}
+
+.mode-slider[data-mode="dark"] .thumb { translate: 100% 0; }
+
+.mode-slider button {
+  position: relative;
+  width: 86px;
+  border: none;
+  background: none;
+  padding: 7px 0;
+  font: inherit;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.22s ease;
+}
+
+.mode-slider button:hover { color: var(--fg); }
+.mode-slider button.active { color: var(--bg); }
 
 /* ---------- behavior ---------- */
 
